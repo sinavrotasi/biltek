@@ -1,3 +1,5 @@
 export function shuffle(items,random=Math.random){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 export function score(questions,answers){let right=0,wrong=0,empty=0;questions.forEach((q,i)=>{if(answers[i]===null)empty++;else if(answers[i]===q.correct)right++;else wrong++});return {right,wrong,empty,percent:Math.round(right/questions.length*100)}}
 export function validSession(s,bank){return !!s&&s.version===1&&Array.isArray(s.ids)&&s.ids.length>0&&s.ids.length<=1000&&new Set(s.ids).size===s.ids.length&&s.ids.every(id=>bank.has(id))&&Array.isArray(s.answers)&&s.answers.length===s.ids.length&&s.answers.every(a=>a===null||Number.isInteger(a)&&a>=0&&a<4)&&Number.isInteger(s.index)&&s.index>=0&&s.index<s.ids.length&&Number.isFinite(s.started)&&s.started>0&&typeof s.finished==='boolean'&&(!s.finished||Number.isFinite(s.ended))}
+
+export function splitTests(bank,topic,size=15){const rows=bank.filter(q=>q.topic===topic);return Array.from({length:Math.ceil(rows.length/size)},(_,i)=>rows.slice(i*size,(i+1)*size))}
